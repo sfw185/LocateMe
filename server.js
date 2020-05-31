@@ -3,6 +3,9 @@ const pug = require("pug");
 
 const redis = require("redis");
 const redis_client = redis.createClient(process.env.REDIS_URL);
+const { promisify } = require("util");
+const getAsync = promisify(redis_client.get).bind(redis_client);
+const setAsync = promisify(redis_client.set).bind(redis_client);
 
 redis_client.on("error", function(error) {
   console.error(error);
@@ -18,14 +21,14 @@ const server = http.createServer((request, response) => {
   const path = request.path;
   
   if (path == "/update") {
-    redis_client.set("LOCATION", LOCATION_KEY, () => {
+    setAsync(LOCATION_KEY, "testing").then(() => {
       response.end(pug.renderFile("template.pug", { path, location: "updated" }));
     });
   }
-
-  redis_client.get(LOCATION_KEY, (error, location) => {
+  
+  getAsync(LOCATION_KEY).then((location) => {
     response.end(pug.renderFile("template.pug", { path, location }));
-  });
+  })
 });
 
 server.listen(port, null, () => {
