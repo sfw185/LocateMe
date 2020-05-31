@@ -3,6 +3,10 @@ html(lang="en")
   head
     title Locate Me
   body
-    p Hello there
-    p My location is #{location}
-  
+    if type == "write"
+      p Location updated!
+    else if type == "read"
+      p Hello there
+      p My location is #{location}
+    else
+      p ERROR

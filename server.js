@@ -18,12 +18,12 @@ const server = http.createServer((request, response) => {
   
   if (request.path === "/update") {
     redis_client.set("LOCATION", LOCATION_KEY, () => {
-      response.end(template({ location: "updated" }));
+      response.end(template({ location: "updated", type: "write" }));
     });
   }
 
   redis_client.get(LOCATION_KEY, (error, location) => {
-    response.end(template({ location }));
+    response.end(template({ location, type: "read" }));
   });
 });
 
