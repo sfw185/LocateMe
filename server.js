@@ -1,6 +1,6 @@
 const http = require("http");
-const jade = require("jade");
-const template = jade.compileFile("template.jade");
+const jade = require("pug");
+const template = jade.compileFile("template.pug");
 
 const port = process.env.PORT || 3000;
 
