@@ -15,15 +15,16 @@ const port = process.env.PORT || 3000;
 const server = http.createServer((request, response) => {
   response.statusCode = 200;
   response.setHeader("Content-Type", "text/html");
+  const path = request.path;
   
-  if (request.path === "/update") {
+  if (path == "/update") {
     redis_client.set("LOCATION", LOCATION_KEY, () => {
-      response.end(template({ location: "updated", type: "write" }));
+      response.end(template({ path, location: "updated" }));
     });
   }
 
   redis_client.get(LOCATION_KEY, (error, location) => {
-    response.end(template({ location, type: "read" }));
+    response.end(template({ path, location }));
   });
 });
 
