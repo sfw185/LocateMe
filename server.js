@@ -8,13 +8,18 @@ const LOCATION_KEY = "LOCATION";
 const port = process.env.PORT || 3000;
 
 const server = http.createServer((request, response) => {
-  if (request.path === "/update") {
-    redis_client.set("LOCATION", LOCATION_KEY);
-  }
-
   response.statusCode = 200;
   response.setHeader("Content-Type", "text/html");
-  response.end(template({ location: redis_client.get(LOCATION_KEY) }));
+  
+  if (request.path === "/update") {
+    redis_client.set("LOCATION", LOCATION_KEY, () => {
+      response.end(template({ location: "updated" }));
+    });
+  }
+
+  redis_client.get(LOCATION_KEY, (location) => {
+    response.end(template({ location }));
+  });
 });
 
 server.listen(port, null, () => {
