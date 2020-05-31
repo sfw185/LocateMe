@@ -1,6 +1,6 @@
 const http = require("http");
-const jade = require("pug");
-const template = jade.compileFile("template.pug");
+const pug = require("pug");
+
 const redis = require("redis");
 const redis_client = redis.createClient(process.env.REDIS_URL);
 
@@ -19,12 +19,12 @@ const server = http.createServer((request, response) => {
   
   if (path == "/update") {
     redis_client.set("LOCATION", LOCATION_KEY, () => {
-      response.end(template({ path, location: "updated" }));
+      response.end(pug.renderFile("template.pug", { path, location: "updated" }));
     });
   }
 
   redis_client.get(LOCATION_KEY, (error, location) => {
-    response.end(template({ path, location }));
+    response.end(pug.renderFile("template.pug", { path, location }));
   });
 });
 
