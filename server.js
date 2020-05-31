@@ -1,7 +1,12 @@
 const http = require("http");
 const jade = require("pug");
 const template = jade.compileFile("template.pug");
-const redis_client = require('redis').createClient(process.env.REDIS_URL);
+const redis = require("redis");
+const redis_client = redis.createClient(process.env.REDIS_URL);
+
+redis_client.on("error", function(error) {
+  console.error(error);
+});
 
 const LOCATION_KEY = "LOCATION";
 
