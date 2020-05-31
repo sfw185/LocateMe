@@ -17,7 +17,7 @@ const server = http.createServer((request, response) => {
     });
   }
 
-  redis_client.get(LOCATION_KEY, (location) => {
+  redis_client.get(LOCATION_KEY, (error, location) => {
     response.end(template({ location }));
   });
 });
